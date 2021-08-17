@@ -1,6 +1,10 @@
 .pageContainer {
     padding: 50px;
     background-color: #fbfbfb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .questionContainer {
@@ -19,4 +23,8 @@
 .surveyHeading {
     text-align: center;
     padding-top: 10px;
+}
+
+.submitButton {
+    text-align: center;
 }
