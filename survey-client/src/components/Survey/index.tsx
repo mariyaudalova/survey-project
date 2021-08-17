@@ -8,6 +8,9 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import Button from "@material-ui/core/Button";
+
+import styles from "./Survey.module.scss";
 
 //import questions from "../../questions.js";
 
@@ -69,11 +72,6 @@ const Survey = () => {
     },
   ];
 
-  let formData = {
-    1: "no",
-    2: "no",
-  };
-
   const [value, setValue] = React.useState("female");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,54 +83,66 @@ const Survey = () => {
   };
 
   return (
-    <Container>
-      <h2>Survey</h2>
-      <Form
-        onSubmit={onSubmit}
-        initialValues={{
-          ...formData,
-        }}
-      >
-        {(props) => (
-          <form onSubmit={props.handleSubmit}>
-            {questions.map((question) => {
-              return (
-                <Paper key={question.id}>
-                  <p>{question.question}</p>
-
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend">Gender</FormLabel>
-                    <RadioGroup
-                      aria-label="gender"
-                      name="gender1"
-                      value={value}
-                      onChange={handleChange}
-                    >
-                      {question.answers.map((answerItem) => {
-                        console.log(answerItem.answer);
-                        return (
-                          <Field type="radio" name={question.id}>
-                            {(props) => (
-                              <FormControlLabel
-                                id={answerItem.id}
-                                control={<Radio />}
-                                label={answerItem.answer}
-                                value={props.input.value}
-                                onChange={props.input.onChange}
-                              />
-                            )}
-                          </Field>
-                        );
-                      })}
-                    </RadioGroup>
-                  </FormControl>
-                </Paper>
-              );
-            })}
-          </form>
-        )}
-      </Form>
-    </Container>
+    <div className={styles.pageContainer}>
+      <Container>
+        <p className={styles.surveyTitle}>Welcome to survey!</p>
+        <p className={styles.surveyHeading}>
+          Be careful - you can take the survey only once
+        </p>
+        <Form onSubmit={onSubmit}>
+          {(props) => (
+            <form onSubmit={props.handleSubmit}>
+              {questions.map((question) => {
+                return (
+                  <Paper key={question.id} className={styles.questionContainer}>
+                    <FormControl component="fieldset">
+                      <FormLabel component="legend">
+                        {question.question}
+                      </FormLabel>
+                      <RadioGroup
+                        aria-label="gender"
+                        name="gender1"
+                        value={value}
+                        onChange={handleChange}
+                      >
+                        {question.answers.map((answerItem) => {
+                          return (
+                            <Field
+                              key={answerItem.id}
+                              type="radio"
+                              name={answerItem.answer}
+                            >
+                              {(props) => (
+                                <FormControlLabel
+                                  checked={props.input.checked}
+                                  id={answerItem.id}
+                                  control={<Radio />}
+                                  label={answerItem.answer}
+                                  value={props.input.value}
+                                  onChange={props.input.onChange}
+                                />
+                              )}
+                            </Field>
+                          );
+                        })}
+                      </RadioGroup>
+                    </FormControl>
+                  </Paper>
+                );
+              })}
+              <Button
+                className={styles.submitButton}
+                type="submit"
+                variant="outlined"
+                color="primary"
+              >
+                Submit
+              </Button>
+            </form>
+          )}
+        </Form>
+      </Container>
+    </div>
   );
 };
 
