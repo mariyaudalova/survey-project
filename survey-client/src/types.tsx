@@ -8,6 +8,7 @@ export interface Answer {
   id: string;
   answer: string;
   number: number;
+  isUserAnswer: boolean | null;
 }
 
 export interface Values {

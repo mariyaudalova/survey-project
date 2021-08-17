@@ -11,70 +11,66 @@ import Button from "@material-ui/core/Button";
 import styles from "./Survey.module.scss";
 import Results from "../Results";
 
-import questions from "../../questions";
-
-import questions2 from "../../questionsNew.json";
-import { Question, Values, QuestionsArray } from "../../types";
+import { Values, QuestionsArray } from "../../types";
 
 const Survey = () => {
-  const [results, setResults] = useState([]);
+  const [currentSurveyState, setCurrentSurveyState] = useState<QuestionsArray>(
+    []
+  );
+
+  const [userResults, setUserResults] = useState({});
 
   const getQuestions = async () => {
-    const response = await fetch("../../questionsNew.json");
+    const response = await fetch("../../questions.json");
     const data = await response.json();
-    //const data = await JSON.parse(response.toString());
     console.log("data.questions", data.questions);
-    setResults(data.questions);
+    setCurrentSurveyState(data.questions);
   };
 
   useEffect(() => {
     getQuestions();
   }, []);
 
-  //const surveyData = getQuestions();
-
-  //const [results, setResults] = useState(surveyData);
-
-  const setQuestions = async () => {
-    const surveyData = await getQuestions();
-    console.log("surveyData", surveyData);
-    return surveyData;
-  };
-
   const initialIsSurveyPassed = localStorage.getItem("isSurveyPassed") || false;
-
-  console.log("questions2", questions2);
 
   const [isSurveyPassed, setIsSurveyPassed] = useState(!!initialIsSurveyPassed);
 
   const onSubmit = async (values: Values) => {
-    const response = await fetch("../../questionsNew.json");
-
-    const data = await response.json();
-
-    console.log("results", data);
-
     console.log(values);
-
+    setUserResults(values);
+    localStorage.setItem("userAnswers", JSON.stringify(values));
     Object.keys(values).forEach((key: string) => {
-      const questionIndex = questions.findIndex((item) => {
+      const questionIndex = currentSurveyState.findIndex((item) => {
         return item.question === key;
       });
-      const answerIndex = questions[questionIndex].answers.findIndex((item) => {
-        return item.id === values[key];
-      });
-      questions[questionIndex].answers[answerIndex].number += 1;
+      const answerIndex = currentSurveyState[questionIndex].answers.findIndex(
+        (item) => {
+          return item.id === values[key];
+        }
+      );
+      currentSurveyState[questionIndex].answers[answerIndex].number += 1;
     });
 
-    console.log("questions", questions);
-    console.log(typeof questions);
-    //setResults(questions);
+    console.log("questions", currentSurveyState);
+
+    setCurrentSurveyState(currentSurveyState);
 
     localStorage.setItem("isSurveyPassed", "true");
     setIsSurveyPassed(true);
   };
 
-  console.log(questions);
+  const formValidation = (values: any) => {
+    const errors: { [key: string]: string } = {};
+    const quesionsList = currentSurveyState.map((item) => {
+      return item.question;
+    });
+    quesionsList.forEach((question: any) => {
+      if (!values[question]) {
+        errors[question] = "Choose answer please";
+      }
+    });
+    return errors;
+  };
 
   return (
     <div className={styles.pageContainer}>
@@ -92,25 +88,23 @@ const Survey = () => {
       <Container>
         {!isSurveyPassed ? (
           <>
-            <Form onSubmit={onSubmit}>
+            <Form onSubmit={onSubmit} validate={formValidation}>
               {(props) => (
                 <form onSubmit={props.handleSubmit}>
-                  {questions.map((question) => {
+                  {currentSurveyState.map((item) => {
+                    const { question } = item;
                     return (
-                      <Paper
-                        key={question.id}
-                        className={styles.questionContainer}
-                      >
+                      <Paper key={item.id} className={styles.questionContainer}>
                         <FormControl component="fieldset">
                           <FormLabel component="legend">
-                            {question.question}
+                            {item.question}
                           </FormLabel>
-                          <RadioGroup aria-label="gender" name="gender1">
-                            {question.answers.map((answerItem, index) => {
+                          <RadioGroup>
+                            {item.answers.map((answerItem, index) => {
                               return (
-                                <label key={question.id + index}>
+                                <label key={item.id + answerItem.id}>
                                   <Field
-                                    name={question.question}
+                                    name={item.question}
                                     component="input"
                                     type="radio"
                                     value={answerItem.id}
@@ -120,6 +114,14 @@ const Survey = () => {
                               );
                             })}
                           </RadioGroup>
+                          <span>
+                            {(props.touched as { [key: string]: boolean })[
+                              question
+                            ] &&
+                              (props.errors as { [key: string]: string })[
+                                question
+                              ]}
+                          </span>
                         </FormControl>
                       </Paper>
                     );
@@ -137,7 +139,7 @@ const Survey = () => {
             </Form>
           </>
         ) : (
-          <Results results={results} />
+          <Results results={currentSurveyState} userResults={userResults} />
         )}
       </Container>
     </div>

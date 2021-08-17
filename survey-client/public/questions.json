@@ -1,0 +1,35 @@
+{
+  "questions":  [{
+    "id": "1",
+    "question": "First question",
+    "answers": [
+      {
+        "id": "1",
+        "answer": "yes",
+        "number": 1
+      },
+      {
+        "id": "2",
+        "answer": "no",
+        "number": 2
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "question": "Second question",
+    "answers": [
+      {
+        "id": "1",
+        "answer": "yes",
+        "number": 1
+      },
+      {
+        "id": "2",
+        "answer": "no",
+        "number": 2
+      }
+    ]
+  }
+]
+}
