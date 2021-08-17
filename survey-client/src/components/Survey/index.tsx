@@ -1,10 +1,13 @@
 import React from "react";
 import Container from "@material-ui/core/Container";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormLabel from "@material-ui/core/FormLabel";
 import Paper from "@material-ui/core/Paper";
 import { Form } from "react-final-form";
 import { Field } from "react-final-form";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
 
 //import questions from "../../questions.js";
 
@@ -73,6 +76,10 @@ const Survey = () => {
 
   const [value, setValue] = React.useState("female");
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+  };
+
   const onSubmit = async (values: any) => {
     console.log(values);
   };
@@ -93,20 +100,32 @@ const Survey = () => {
                 <Paper key={question.id}>
                   <p>{question.question}</p>
 
-                  {question.answers.map((answerItem) => {
-                    console.log(answerItem.answer);
-                    return (
-                      <label>
-                        <Field
-                          name={question.id}
-                          component="input"
-                          type="radio"
-                          value={answerItem.answer}
-                        />
-                        {answerItem.answer}
-                      </label>
-                    );
-                  })}
+                  <FormControl component="fieldset">
+                    <FormLabel component="legend">Gender</FormLabel>
+                    <RadioGroup
+                      aria-label="gender"
+                      name="gender1"
+                      value={value}
+                      onChange={handleChange}
+                    >
+                      {question.answers.map((answerItem) => {
+                        console.log(answerItem.answer);
+                        return (
+                          <Field type="radio" name={question.id}>
+                            {(props) => (
+                              <FormControlLabel
+                                id={answerItem.id}
+                                control={<Radio />}
+                                label={answerItem.answer}
+                                value={props.input.value}
+                                onChange={props.input.onChange}
+                              />
+                            )}
+                          </Field>
+                        );
+                      })}
+                    </RadioGroup>
+                  </FormControl>
                 </Paper>
               );
             })}
