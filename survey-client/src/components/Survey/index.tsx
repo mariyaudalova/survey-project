@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import { Form } from "react-final-form";
@@ -14,21 +14,43 @@ import Results from "../Results";
 import questions from "../../questions";
 
 import questions2 from "../../questionsNew.json";
-import { Values } from "../../types";
+import { Question, Values, QuestionsArray } from "../../types";
 
 const Survey = () => {
+  const [results, setResults] = useState([]);
+
+  const getQuestions = async () => {
+    const response = await fetch("../../questionsNew.json");
+    const data = await response.json();
+    //const data = await JSON.parse(response.toString());
+    console.log("data.questions", data.questions);
+    setResults(data.questions);
+  };
+
+  useEffect(() => {
+    getQuestions();
+  }, []);
+
+  //const surveyData = getQuestions();
+
+  //const [results, setResults] = useState(surveyData);
+
+  const setQuestions = async () => {
+    const surveyData = await getQuestions();
+    console.log("surveyData", surveyData);
+    return surveyData;
+  };
+
   const initialIsSurveyPassed = localStorage.getItem("isSurveyPassed") || false;
 
   console.log("questions2", questions2);
 
   const [isSurveyPassed, setIsSurveyPassed] = useState(!!initialIsSurveyPassed);
 
-  const [results, setResults] = useState(questions);
-
   const onSubmit = async (values: Values) => {
-    const results = await fetch("../../questionsNew.json");
+    const response = await fetch("../../questionsNew.json");
 
-    const data = await results.json();
+    const data = await response.json();
 
     console.log("results", data);
 
@@ -45,7 +67,8 @@ const Survey = () => {
     });
 
     console.log("questions", questions);
-    setResults(questions);
+    console.log(typeof questions);
+    //setResults(questions);
 
     localStorage.setItem("isSurveyPassed", "true");
     setIsSurveyPassed(true);

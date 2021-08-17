@@ -1,21 +1,12 @@
 import React from "react";
 
 import styles from "./Survey.module.scss";
+import { QuestionsArray } from "../../types";
 
 //import questions from "../../questions.js";
-interface Question {
-  id: string;
-  question: string;
-  answers: Array<Answer>;
-}
 
-interface Answer {
-  id: string;
-  answer: string;
-  number: number;
-}
-
-const Results = ({ results }: { results: Array<Question> }) => {
-  return <div>{results[0].answers[0].number}</div>;
+const Results = (results: any) => {
+  console.log("dcsdc", results);
+  return <div>"dc"</div>;
 };
 export default Results;

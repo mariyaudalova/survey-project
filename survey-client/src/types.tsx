@@ -13,3 +13,5 @@ export interface Answer {
 export interface Values {
   [key: string]: string;
 }
+
+export type QuestionsArray = Array<Question>;
