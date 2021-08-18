@@ -16,10 +16,6 @@ const Results = ({
 }) => {
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
-  useEffect(() => {
-    getResultsWithStatistics();
-  }, []);
-
   if (Object.keys(userResults).length === 0) {
     userResults = localStorage.getItem("userAnswers");
   }
@@ -66,7 +62,10 @@ const Results = ({
     );
   };
 
-  getResultsWithStatistics();
+  const completedSurveyData = localStorage.getItem("statistics");
+  if (!completedSurveyData) getResultsWithStatistics();
+  else results = JSON.parse(completedSurveyData);
+  getTotalNumberByQuestion();
 
   return (
     <div>
