@@ -6,7 +6,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { Question } from "../../types";
 
-import styles from "./Survey.module.scss";
+import styles from "../Survey/Survey.module.scss";
 
 const Results = ({
   results,
@@ -108,7 +108,7 @@ const Results = ({
       sdvsdv
       {results.map((question, index) => {
         return (
-          <Accordion
+          <Accordion className={styles.questionContainer}
             expanded={expanded === ("panel" + question.id).toString()}
             onChange={handleChange("panel" + question.id)}
           >

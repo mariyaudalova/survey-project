@@ -107,6 +107,7 @@ const Survey = () => {
                                     name={item.question}
                                     component="input"
                                     type="radio"
+                                    className={styles.radioButton}
                                     value={answerItem.id}
                                   />
                                   {answerItem.answer}
@@ -114,7 +115,7 @@ const Survey = () => {
                               );
                             })}
                           </RadioGroup>
-                          <span>
+                          <span className={styles.errorMessage}>
                             {(props.touched as { [key: string]: boolean })[
                               question
                             ] &&
@@ -126,14 +127,15 @@ const Survey = () => {
                       </Paper>
                     );
                   })}
-                  <Button
-                    className={styles.submitButton}
+                  <div className={styles.submitButton}><Button
+                    
                     type="submit"
                     variant="outlined"
                     color="primary"
                   >
                     Submit
                   </Button>
+                  </div>
                 </form>
               )}
             </Form>
