@@ -15,7 +15,7 @@ const Results = ({
   userResults: any;
 }) => {
   const [expanded, setExpanded] = React.useState<string | false>(false);
-
+  let totalCount = 0;
   if (Object.keys(userResults).length === 0) {
     userResults = localStorage.getItem("userAnswers");
   }
@@ -25,9 +25,8 @@ const Results = ({
       setExpanded(isExpanded ? panel : false);
     };
 
-  let totalCount = 0;
-
   const getTotalNumberByQuestion = () => {
+    totalCount = 0;
     results[0].answers.map((answer) => {
       totalCount += answer.number;
     });
@@ -41,7 +40,7 @@ const Results = ({
     const newResultsWithStatistics = resultsWithStatistics.map(
       (question: Question, index) => {
         totalCount = 0;
-        const totalSurveyCompletes = getTotalNumberByQuestion();
+        getTotalNumberByQuestion();
 
         const valueOfAnswer = userResults[question.question];
 
