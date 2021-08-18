@@ -9,6 +9,7 @@ export interface Answer {
   answer: string;
   number: number;
   isUserAnswer: boolean | null;
+  percentValue: number | null;
 }
 
 export interface Values {

@@ -1,10 +1,6 @@
 .pageContainer {
     padding: 50px;
     background-color: #fbfbfb;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
 }
 
 .questionContainer {
@@ -37,4 +33,14 @@
 
 .errorMessage {
     color: #f44336;
+}
+
+.statisticsDataContent {
+    padding-bottom: 15px;
+}
+
+.surveyCompleteContent {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 20px;
 }

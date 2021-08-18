@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { Question } from "../../types";
-
 import styles from "../Survey/Survey.module.scss";
 
 const Results = ({
@@ -17,7 +16,11 @@ const Results = ({
 }) => {
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
-  if (Object.keys(userResults).length == 0) {
+  useEffect(() => {
+    getResultsWithStatistics();
+  }, []);
+
+  if (Object.keys(userResults).length === 0) {
     userResults = localStorage.getItem("userAnswers");
   }
 
@@ -26,10 +29,9 @@ const Results = ({
       setExpanded(isExpanded ? panel : false);
     };
 
-  const getTotalNumberByQuestion = () => {
-    // find total amount of answers
-    let totalCount = 0;
+  let totalCount = 0;
 
+  const getTotalNumberByQuestion = () => {
     results[0].answers.map((answer) => {
       totalCount += answer.number;
     });
@@ -40,64 +42,27 @@ const Results = ({
   const getResultsWithStatistics = () => {
     const resultsWithStatistics = [...results];
 
-    const newresultsWithStatistics = resultsWithStatistics.forEach(
-      (question, index) => {
-        // вызвать нахожденние тотала
+    const newResultsWithStatistics = resultsWithStatistics.map(
+      (question: Question, index) => {
+        totalCount = 0;
         const totalSurveyCompletes = getTotalNumberByQuestion();
 
-        // найти вопрос key которого начинается с question.id
+        const valueOfAnswer = userResults[question.question];
 
-        console.log("userResults", userResults);
-        const assignmentsdv = "1 Question";
+        question.answers.forEach((answer) => {
+          answer.percentValue = (answer.number / totalCount) * 100;
 
-        /*console.log("Object.keys(userResults)", Object.keys(userResults));
+          answer.isUserAnswer = valueOfAnswer === answer.id;
 
-        const questionIndexInAnswers = Object.keys(userResults).findIndex(
-          (item) => {
-            console.log("item[0]", item[0], "question.id", question.id);
-            return item[0] == question.id;
-          }
-        );
-        console.log("questionIndexInAnswers", questionIndexInAnswers);
-        console.log("keys", Object.keys(userResults));
-        console.log(
-          "userResults[questionIndexInAnswers]",
-          userResults[questionIndexInAnswers]
-        );
-        // пройтись по ответам и добавить поле isUserAnswer
-
-        /*question.answers.map((answer) => {
-          // Object.keys(userResults).findIndex(k => k.startsWith({question.id}));
-          const userAnswerIndex = userResults[questionIndexInAnswers];
-
-          console.log("questionIndexInAnswers", userAnswerIndex);
-
-          // const isUserAnswer = userResults[index] === answer.id;
-
-          // answer["isUserAnswer"] = (question.id === );
           return answer;
         });
-
-        // посчитать number / total
-
-        const questionIndex = Object.keys(userResults).findIndex((item) => {
-          return item === question.question;
-        });
-
-        console.log(questionIndex);
-
-        Object.keys(userResults).forEach((key: string) => {
-          const questionIndex = results.findIndex((item) => {
-            return item.question === key;
-          });
-        });
-
-        console.log("resultsWithStatistics", resultsWithStatistics);
-
-        /*  const answerIndex = results[questionIndex].answers.findIndex((item) => {
-          return item.id === userResults[key];
-        });*/
+        return question;
       }
+    );
+
+    localStorage.setItem(
+      "statistics",
+      JSON.stringify(newResultsWithStatistics)
     );
   };
 
@@ -105,27 +70,52 @@ const Results = ({
 
   return (
     <div>
-      sdvsdv
+      <p className={styles.surveyCompleteContent}>
+        <b>{totalCount - 1} users</b> passed this survey except you. See
+        extended results:
+      </p>
       {results.map((question, index) => {
         return (
-          <Accordion className={styles.questionContainer}
+          <Accordion
+            key={question.id}
+            className={styles.questionContainer}
             expanded={expanded === ("panel" + question.id).toString()}
             onChange={handleChange("panel" + question.id)}
           >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1bh-content"
-              id="panel1bh-header"
-            >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <p>
-                {index + 1} {question.question}
+                {index + 1}. {question.question} - "
+                {
+                  question.answers[
+                    question.answers.findIndex((answer) => {
+                      return answer.isUserAnswer;
+                    })
+                  ].answer
+                }
+                " (as{" "}
+                {question.answers[
+                  question.answers.findIndex((answer) => {
+                    return answer.isUserAnswer;
+                  })
+                ].percentValue?.toFixed(2)}
+                % of all applicants)
               </p>
             </AccordionSummary>
             <AccordionDetails>
-              <p>
-                Nulla facilisi. Phasellus sollicitudin nulla et quam mattis
-                feugiat. Aliquam eget maximus est, id dignissim quam.
-              </p>
+              <ul>
+                {question.answers.map((answer) => {
+                  return (
+                    <li
+                      key={answer.id}
+                      className={styles.statisticsDataContent}
+                    >
+                      The <b>"{answer.answer}"</b> option was selected{" "}
+                      <b>{answer.percentValue?.toFixed(2)} % </b> by other
+                      users.
+                    </li>
+                  );
+                })}
+              </ul>
             </AccordionDetails>
           </Accordion>
         );

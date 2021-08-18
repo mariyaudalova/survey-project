@@ -1,32 +1,78 @@
 {
   "questions":  [{
-    "id": "1",
-    "question": "First question",
+    "id": "0",
+    "question": "Which of the following best describes the industry segment of the company/organization for which you work? ",
     "answers": [
       {
-        "id": "1",
-        "answer": "yes",
+        "id": "0",
+        "answer": "Architecture",
         "number": 1
       },
       {
-        "id": "2",
-        "answer": "no",
+        "id": "1",
+        "answer": "Banking / Financial Services",
         "number": 2
+      },
+      {
+        "id": "2",
+        "answer": "Healthcare / Medical",
+        "number": 5
+      },
+      {
+        "id": "3",
+        "answer": "Transportation",
+        "number": 4
+      }
+    ]
+  },
+  {
+    "id": "1",
+    "question": "Which of the following best describes your department or functional role at work?",
+    "answers": [
+      {
+        "id": "0",
+        "answer": "Administration/ Management",
+        "number": 0
+      },
+      {
+        "id": "1",
+        "answer": "Developer / Programmer",
+        "number": 6
+      },
+      {
+        "id": "2",
+        "answer": "Facilities / Maintenance",
+        "number": 2
+      },
+      {
+        "id": "3",
+        "answer": "Operations / Production",
+        "number": 4
       }
     ]
   },
   {
     "id": "2",
-    "question": "Second question",
+    "question": "How would you best describe your role in the company’s decision-making process? ",
     "answers": [
       {
+        "id": "0",
+        "answer": "Sole decision maker",
+        "number": 3
+      },
+      {
         "id": "1",
-        "answer": "yes",
-        "number": 1
+        "answer": "One of several decision makers",
+        "number": 7
       },
       {
         "id": "2",
-        "answer": "no",
+        "answer": "Provide input/evaluations to help inform the decision",
+        "number": 3
+      },
+      {
+        "id": "3",
+        "answer": "Not at all involved",
         "number": 2
       }
     ]

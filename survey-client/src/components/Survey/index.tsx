@@ -8,16 +8,14 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
 
+import { Values, QuestionsArray } from "../../types";
 import styles from "./Survey.module.scss";
 import Results from "../Results";
-
-import { Values, QuestionsArray } from "../../types";
 
 const Survey = () => {
   const [currentSurveyState, setCurrentSurveyState] = useState<QuestionsArray>(
     []
   );
-
   const [userResults, setUserResults] = useState({});
 
   const getQuestions = async () => {
@@ -36,9 +34,14 @@ const Survey = () => {
   const [isSurveyPassed, setIsSurveyPassed] = useState(!!initialIsSurveyPassed);
 
   const onSubmit = async (values: Values) => {
-    console.log(values);
     setUserResults(values);
     localStorage.setItem("userAnswers", JSON.stringify(values));
+
+    /*  We cannot save as values keys id of answers.
+     *  This is technical limitation of react-final-form. After we implement integration with Formik instead of
+     *  Final-form the following part of realization will be more easily
+     */
+
     Object.keys(values).forEach((key: string) => {
       const questionIndex = currentSurveyState.findIndex((item) => {
         return item.question === key;
@@ -51,11 +54,8 @@ const Survey = () => {
       currentSurveyState[questionIndex].answers[answerIndex].number += 1;
     });
 
-    console.log("questions", currentSurveyState);
-
-    setCurrentSurveyState(currentSurveyState);
-
     localStorage.setItem("isSurveyPassed", "true");
+    setCurrentSurveyState(currentSurveyState);
     setIsSurveyPassed(true);
   };
 
@@ -100,7 +100,7 @@ const Survey = () => {
                             {item.question}
                           </FormLabel>
                           <RadioGroup>
-                            {item.answers.map((answerItem, index) => {
+                            {item.answers.map((answerItem) => {
                               return (
                                 <label key={item.id + answerItem.id}>
                                   <Field
@@ -127,14 +127,10 @@ const Survey = () => {
                       </Paper>
                     );
                   })}
-                  <div className={styles.submitButton}><Button
-                    
-                    type="submit"
-                    variant="outlined"
-                    color="primary"
-                  >
-                    Submit
-                  </Button>
+                  <div className={styles.submitButton}>
+                    <Button type="submit" variant="outlined" color="primary">
+                      Submit
+                    </Button>
                   </div>
                 </form>
               )}
